@@ -10,6 +10,7 @@ export class Gedit extends Component {
         this.state = {
             sending: false,
             status: null, // null, 'success', 'error'
+            errorMessage: "",
         }
     }
 
@@ -37,7 +38,7 @@ export class Gedit extends Component {
         }
         if (error) return;
 
-        this.setState({ sending: true, status: null });
+        this.setState({ sending: true, status: null, errorMessage: "" });
 
         // Use EmailJS if keys are available, otherwise fallback to our API
         const serviceID = process.env.NEXT_PUBLIC_SERVICE_ID || "service_qt4ryip";
@@ -51,6 +52,8 @@ export class Gedit extends Component {
                 templateID,
                 {
                     from_name: name,
+                    user_name: name,
+                    reply_to: name,
                     to_name: "Parth Arora",
                     subject: subject,
                     message: message,
@@ -64,7 +67,7 @@ export class Gedit extends Component {
                     $("#close-gedit").trigger("click");
                 }, 2000);
             } else {
-                throw new Error("EmailJS failed");
+                throw new Error(`EmailJS failed with status: ${result.status}`);
             }
         } catch (err) {
             console.warn("EmailJS failed, falling back to API:", err);
@@ -79,17 +82,23 @@ export class Gedit extends Component {
                     body: JSON.stringify({ name, subject, message }),
                 });
 
+                const data = await response.json();
+
                 if (response.ok) {
                     this.setState({ sending: false, status: 'success' });
                     setTimeout(() => {
                         $("#close-gedit").trigger("click");
                     }, 2000);
                 } else {
-                    throw new Error('Fallback API failed');
+                    throw new Error(data.message || data.error || 'Fallback API failed');
                 }
             } catch (fallbackErr) {
                 console.error('All sending methods failed:', fallbackErr);
-                this.setState({ sending: false, status: 'error' });
+                this.setState({ 
+                    sending: false, 
+                    status: 'error',
+                    errorMessage: fallbackErr.message || "Unknown error occurred"
+                });
             }
         }
 
@@ -141,9 +150,10 @@ export class Gedit extends Component {
                 }
                 {
                     this.state.status === 'error' && (
-                        <div className="flex flex-col justify-center items-center h-full w-full bg-red-600 bg-opacity-90 absolute top-0 left-0 z-50 animateShow">
+                        <div className="flex flex-col justify-center items-center h-full w-full bg-red-600 bg-opacity-90 absolute top-0 left-0 z-50 animateShow px-4 text-center">
                             <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             <span className="text-xl font-bold text-white">Failed to Send</span>
+                            <span className="text-xs mt-2 text-gray-200 max-w-xs break-words">{this.state.errorMessage}</span>
                             <button onClick={() => this.setState({ status: null })} className="mt-4 px-4 py-1 bg-white text-red-600 rounded-sm font-bold hover:bg-opacity-90 transition-colors">Try Again</button>
                         </div>
                     )
@@ -158,5 +168,6 @@ export default Gedit;
 export const displayGedit = () => {
     return <Gedit> </Gedit>;
 }
+
 
 
