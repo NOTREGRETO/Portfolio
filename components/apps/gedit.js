@@ -23,30 +23,25 @@ export class Gedit extends Component {
         subject = subject.trim();
         message = message.trim();
 
-        let error = false;
-
-        if (name.length === 0) {
-            $("#sender-name").val('');
-            $("#sender-name").attr("placeholder", "Name must not be Empty!");
-            error = true;
+        if (name.length === 0 || message.length === 0) {
+            if (name.length === 0) {
+                $("#sender-name").val('').attr("placeholder", "Name must not be Empty!");
+            }
+            if (message.length === 0) {
+                $("#sender-message").val('').attr("placeholder", "Message must not be Empty!");
+            }
+            return;
         }
-
-        if (message.length === 0) {
-            $("#sender-message").val('');
-            $("#sender-message").attr("placeholder", "Message must not be Empty!");
-            error = true;
-        }
-        if (error) return;
 
         this.setState({ sending: true, status: null, errorMessage: "" });
 
-        // Use EmailJS if keys are available, otherwise fallback to our API
         const serviceID = process.env.NEXT_PUBLIC_SERVICE_ID || "service_qt4ryip";
         const templateID = process.env.NEXT_PUBLIC_TEMPLATE_ID || "template_2ni69n8";
         const userID = process.env.NEXT_PUBLIC_USER_ID || "user_Do31sKneP4eYfn5n1nLTD";
 
         try {
-            // First try EmailJS (works on both GH Pages and Vercel)
+            // Initialize and Send via EmailJS
+            emailjs.init(userID);
             const result = await emailjs.send(
                 serviceID,
                 templateID,
@@ -54,11 +49,10 @@ export class Gedit extends Component {
                     from_name: name,
                     user_name: name,
                     reply_to: name,
-                    to_name: "Parth Arora",
-                    subject: subject,
+                    subject: subject || "No Subject",
                     message: message,
-                },
-                userID
+                    to_name: "Parth Arora",
+                }
             );
 
             if (result.status === 200) {
@@ -67,18 +61,15 @@ export class Gedit extends Component {
                     $("#close-gedit").trigger("click");
                 }, 2000);
             } else {
-                throw new Error(`EmailJS failed with status: ${result.status}`);
+                throw new Error(`EmailJS returned status ${result.status}`);
             }
         } catch (err) {
-            console.warn("EmailJS failed, falling back to API:", err);
+            console.warn("EmailJS failed, trying API fallback...", err);
             
-            // Fallback to our local API route (works on Vercel)
             try {
                 const response = await fetch('/api/sendEmail', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, subject, message }),
                 });
 
@@ -90,14 +81,14 @@ export class Gedit extends Component {
                         $("#close-gedit").trigger("click");
                     }, 2000);
                 } else {
-                    throw new Error(data.message || data.error || 'Fallback API failed');
+                    throw new Error(data.message || data.error || "Server error");
                 }
             } catch (fallbackErr) {
-                console.error('All sending methods failed:', fallbackErr);
+                console.error("All sending methods failed:", fallbackErr);
                 this.setState({ 
                     sending: false, 
-                    status: 'error',
-                    errorMessage: fallbackErr.message || "Unknown error occurred"
+                    status: 'error', 
+                    errorMessage: fallbackErr.message || "Please check your credentials or network connection."
                 });
             }
         }
@@ -114,7 +105,7 @@ export class Gedit extends Component {
                 <div className="flex items-center justify-between w-full bg-ub-gedit-light bg-opacity-60 border-b border-t border-blue-400 text-sm">
                     <span className="font-bold ml-2">Send a Message to Me</span>
                     <div className="flex">
-                        <div onClick={this.sendMessage} className="border border-black bg-black bg-opacity-50 px-3 py-0.5 my-1 mx-1 rounded hover:bg-opacity-80 cursor-pointer">Send</div>
+                        <div onClick={this.sendMessage} className="border border-black bg-black bg-opacity-50 px-3 py-0.5 my-1 mx-1 rounded hover:bg-opacity-80 cursor-pointer transition-colors">Send</div>
                     </div>
                 </div>
                 <div className="relative flex-grow flex flex-col bg-ub-gedit-dark font-normal windowMainScreen">
@@ -143,18 +134,18 @@ export class Gedit extends Component {
                     this.state.status === 'success' && (
                         <div className="flex flex-col justify-center items-center h-full w-full bg-green-600 bg-opacity-90 absolute top-0 left-0 z-50 animateShow">
                             <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span className="text-xl font-bold text-white">Message Sent!</span>
-                            <span className="text-sm mt-2">Closing window...</span>
+                            <span className="text-xl font-bold text-white uppercase tracking-tighter">Message Sent!</span>
+                            <span className="text-sm mt-2 font-light">Closing window...</span>
                         </div>
                     )
                 }
                 {
                     this.state.status === 'error' && (
-                        <div className="flex flex-col justify-center items-center h-full w-full bg-red-600 bg-opacity-90 absolute top-0 left-0 z-50 animateShow px-4 text-center">
-                            <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                            <span className="text-xl font-bold text-white">Failed to Send</span>
-                            <span className="text-xs mt-2 text-gray-200 max-w-xs break-words">{this.state.errorMessage}</span>
-                            <button onClick={() => this.setState({ status: null })} className="mt-4 px-4 py-1 bg-white text-red-600 rounded-sm font-bold hover:bg-opacity-90 transition-colors">Try Again</button>
+                        <div className="flex flex-col justify-center items-center h-full w-full bg-red-600 bg-opacity-95 absolute top-0 left-0 z-50 animateShow px-6 text-center">
+                            <svg className="w-16 h-16 mb-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <span className="text-xl font-bold text-white uppercase tracking-tighter">Failed to Send</span>
+                            <span className="text-xs mt-3 text-gray-100 max-w-xs break-words font-medium bg-black bg-opacity-20 p-2 rounded">{this.state.errorMessage}</span>
+                            <button onClick={() => this.setState({ status: null })} className="mt-6 px-6 py-2 bg-white text-red-600 rounded font-bold hover:bg-gray-100 transition-colors shadow-lg">Try Again</button>
                         </div>
                     )
                 }
@@ -168,6 +159,7 @@ export default Gedit;
 export const displayGedit = () => {
     return <Gedit> </Gedit>;
 }
+
 
 
 
