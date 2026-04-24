@@ -12,6 +12,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Repository 📦
@@ -34,10 +36,7 @@ jobs:
           NEXT_PUBLIC_TEMPLATE_ID: template_2ni69n8
           NEXT_PUBLIC_USER_ID: user_Do31sKneP4eYfn5n1nLTD
 
-      - name: Export Static Files 🎪
-        run: npm run export
-
-      - name: Add .nojekyll
+      - name: Add .nojekyll 🚩
         run: touch ./out/.nojekyll
 
       - name: Deploy to GitHub Pages 🚀
