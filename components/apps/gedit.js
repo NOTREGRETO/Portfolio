@@ -45,6 +45,28 @@ export class Gedit extends Component {
             emailjs.init(userID);
 
             // Send via EmailJS (works on any hosting - static or server)
+            const timestamp = new Date().toLocaleString('en-IN', { 
+                dateStyle: 'full', timeStyle: 'short', timeZone: 'Asia/Kolkata' 
+            });
+            const formattedMessage = [
+                `Dear Parth Arora,`,
+                ``,
+                `You have received a new inquiry through your portfolio website.`,
+                ``,
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+                `📧 From: ${name}`,
+                `📋 Subject: ${subject || 'General Inquiry'}`,
+                `🕐 Received: ${timestamp}`,
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+                ``,
+                `Message:`,
+                `${message}`,
+                ``,
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+                `This message was sent via ParthAroraTSC Portfolio`,
+                `https://partharoratsc.github.io`,
+            ].join('\n');
+
             const result = await emailjs.send(
                 serviceID,
                 templateID,
@@ -52,8 +74,8 @@ export class Gedit extends Component {
                     from_name: name,
                     user_name: name,
                     reply_to: name.includes('@') ? name : undefined,
-                    subject: subject || "No Subject",
-                    message: message,
+                    subject: `🔔 Portfolio Inquiry: ${subject || 'General Inquiry'}`,
+                    message: formattedMessage,
                     to_name: "Parth Arora",
                 }
             );
