@@ -35,20 +35,23 @@ export class Gedit extends Component {
 
         this.setState({ sending: true, status: null, errorMessage: "" });
 
-        const serviceID = process.env.NEXT_PUBLIC_SERVICE_ID || "service_qt4ryip";
-        const templateID = process.env.NEXT_PUBLIC_TEMPLATE_ID || "template_2ni69n8";
-        const userID = process.env.NEXT_PUBLIC_USER_ID || "user_Do31sKneP4eYfn5n1nLTD";
+        // EmailJS credentials - hardcoded as reliable defaults
+        const serviceID = "service_qt4ryip";
+        const templateID = "template_2ni69n8";
+        const userID = "user_Do31sKneP4eYfn5n1nLTD";
 
         try {
-            // Initialize and Send via EmailJS
+            // Initialize EmailJS with public key
             emailjs.init(userID);
+
+            // Send via EmailJS (works on any hosting - static or server)
             const result = await emailjs.send(
                 serviceID,
                 templateID,
                 {
                     from_name: name,
                     user_name: name,
-                    reply_to: name,
+                    reply_to: name.includes('@') ? name : undefined,
                     subject: subject || "No Subject",
                     message: message,
                     to_name: "Parth Arora",
@@ -63,34 +66,44 @@ export class Gedit extends Component {
             } else {
                 throw new Error(`EmailJS returned status ${result.status}`);
             }
-        } catch (err) {
-            console.warn("EmailJS failed, trying API fallback...", err);
-            
-            try {
-                const response = await fetch('/api/sendEmail', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, subject, message }),
-                });
+        } catch (emailjsErr) {
+            console.error("EmailJS Error:", emailjsErr);
 
-                const data = await response.json();
+            // Only try API fallback if we're on a server-rendered deployment (not static GitHub Pages)
+            const isServerDeployment = typeof window !== 'undefined' && 
+                !window.location.hostname.includes('github.io');
 
-                if (response.ok) {
-                    this.setState({ sending: false, status: 'success' });
-                    setTimeout(() => {
-                        $("#close-gedit").trigger("click");
-                    }, 2000);
-                } else {
-                    throw new Error(data.message || data.error || "Server error");
+            if (isServerDeployment) {
+                try {
+                    const response = await fetch('/api/sendEmail', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, subject, message }),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        this.setState({ sending: false, status: 'success' });
+                        setTimeout(() => {
+                            $("#close-gedit").trigger("click");
+                        }, 2000);
+                        return;
+                    } else {
+                        throw new Error(data.message || "Server error");
+                    }
+                } catch (apiErr) {
+                    console.error("API fallback also failed:", apiErr);
                 }
-            } catch (fallbackErr) {
-                console.error("All sending methods failed:", fallbackErr);
-                this.setState({ 
-                    sending: false, 
-                    status: 'error', 
-                    errorMessage: fallbackErr.message || "Please check your credentials or network connection."
-                });
             }
+
+            // If we reach here, all methods failed
+            const errorText = emailjsErr?.text || emailjsErr?.message || "Unknown error";
+            this.setState({ 
+                sending: false, 
+                status: 'error', 
+                errorMessage: `EmailJS: ${errorText}`
+            });
         }
 
         ReactGA.event({
