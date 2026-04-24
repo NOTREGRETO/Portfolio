@@ -4,7 +4,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  output: 'export',
+  // Only enable static export for GitHub Pages builds
+  ...(process.env.GITHUB_ACTIONS && { output: 'export' }),
 }
 
 module.exports = nextConfig
