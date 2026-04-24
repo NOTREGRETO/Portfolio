@@ -1,8 +1,8 @@
 {
-  "name": "notregreto-portfolio",
+  "name": "partharoratsc-portfolio",
   "version": "2.0.0",
   "private": true,
-  "homepage": "https://notregreto.github.io/",
+  "homepage": "https://partharoratsc.github.io/",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

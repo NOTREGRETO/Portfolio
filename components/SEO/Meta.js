@@ -9,10 +9,10 @@ export default function Meta() {
             <meta charSet="utf-8" />
             <meta name="title" content="Parth Arora Portfolio - SOC Analyst" />
             <meta name="description"
-                content="Parth Arora's (NOTREGRETO) Personal Portfolio Website. Made with Ubuntu 20.4 (Linux) theme by Next.js and Tailwind CSS." />
-            <meta name="author" content="Parth Arora (NOTREGRETO)" />
+                content="Parth Arora's (ParthAroraTSC) Personal Portfolio Website. Made with Ubuntu 20.4 (Linux) theme by Next.js and Tailwind CSS." />
+            <meta name="author" content="Parth Arora (ParthAroraTSC)" />
             <meta name="keywords"
-                content="NOTREGRETO, NOTREGRETO's portfolio, NOTREGRETO linux, ubuntu portfolio, parth arora portfolio, parth arora cybersecurity, parth arora, parth ubuntu, parth arora ubuntu portfolio" />
+                content="ParthAroraTSC, ParthAroraTSC's portfolio, ParthAroraTSC linux, ubuntu portfolio, parth arora portfolio, parth arora cybersecurity, parth arora, parth ubuntu, parth arora ubuntu portfolio" />
             <meta name="robots" content="index, follow" />
             <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
             <meta name="language" content="English" />
@@ -24,22 +24,22 @@ export default function Meta() {
             /* Schema.org for Google */
             <meta itemProp="name" content="Parth Arora Portfolio - SOC Analyst" />
             <meta itemProp="description"
-                content="Parth Arora's (NOTREGRETO) Personal Portfolio Website. Made with Ubuntu 20.4 (Linux) theme by Next.js and Tailwind CSS." />
+                content="Parth Arora's (ParthAroraTSC) Personal Portfolio Website. Made with Ubuntu 20.4 (Linux) theme by Next.js and Tailwind CSS." />
             <meta itemProp="image" content="images/logos/fevicon.png" />
             /* Twitter */
             <meta name="twitter:card" content="summary" />
             <meta name="twitter:title" content="Parth Arora Portfolio - SOC Analyst" />
             <meta name="twitter:description"
-                content="Parth Arora's (NOTREGRETO) Personal Portfolio Website. Made with Ubuntu 20.4 (Linux) theme by Next.js and Tailwind CSS." />
-            <meta name="twitter:site" content="NOTREGRETO" />
-            <meta name="twitter:creator" content="NOTREGRETO" />
+                content="Parth Arora's (ParthAroraTSC) Personal Portfolio Website. Made with Ubuntu 20.4 (Linux) theme by Next.js and Tailwind CSS." />
+            <meta name="twitter:site" content="ParthAroraTSC" />
+            <meta name="twitter:creator" content="ParthAroraTSC" />
             <meta name="twitter:image:src" content="images/logos/logo_1024.png" />
             /* Open Graph general (Facebook, Pinterest & Google+) */
             <meta name="og:title" content="Parth Arora Portfolio - SOC Analyst" />
             <meta name="og:description"
-                content="Parth Arora's (NOTREGRETO) Personal Portfolio Website. Made with Ubuntu 20.4 (Linux) theme by Next.js and Tailwind CSS." />
+                content="Parth Arora's (ParthAroraTSC) Personal Portfolio Website. Made with Ubuntu 20.4 (Linux) theme by Next.js and Tailwind CSS." />
             <meta name="og:image" content="images/logos/logo_1200.png" />
-            <meta name="og:url" content="https://NOTREGRETO.github.io/" />
+            <meta name="og:url" content="https://ParthAroraTSC.github.io/" />
             <meta name="og:site_name" content="Parth Arora Personal Portfolio" />
             <meta name="og:locale" content="en_IN" />
             <meta name="og:type" content="website" />

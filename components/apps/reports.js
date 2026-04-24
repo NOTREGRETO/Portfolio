@@ -41,7 +41,7 @@ const Reports = () => {
                                 <p className="text-sm text-gray-500 font-medium">Security Implementation & Analysis Report</p>
                             </div>
                             <div className="text-right">
-                                <p className="text-xs font-bold text-gray-400 italic">NOTREGRETO SECURITY LABS</p>
+                                <p className="text-xs font-bold text-gray-400 italic">ParthAroraTSC SECURITY LABS</p>
                                 <p className="text-xs text-gray-400">Date: 2025-2026</p>
                             </div>
                         </div>

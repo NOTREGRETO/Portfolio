@@ -4,7 +4,7 @@ export default function Spotify() {
     const [activePlaylist, setActivePlaylist] = useState("0MwvYS9Ze9otquNC5LEB8T");
 
     const playlists = [
-        { id: "0MwvYS9Ze9otquNC5LEB8T", name: "Parth's Vibe 1", description: "Curated collection by NOTREGRETO" },
+        { id: "0MwvYS9Ze9otquNC5LEB8T", name: "Parth's Vibe 1", description: "Curated collection by ParthAroraTSC" },
         { id: "1f3YDsTOam8qpootoC6nic", name: "Parth's Vibe 2", description: "Smooth flows and deep focus" }
     ];
 
@@ -73,7 +73,7 @@ export default function Spotify() {
                                 {playlists.find(p => p.id === activePlaylist).name}
                             </h1>
                             <p className="text-sm text-gray-400">
-                                {playlists.find(p => p.id === activePlaylist).description} • NOTREGRETO
+                                {playlists.find(p => p.id === activePlaylist).description} • ParthAroraTSC
                             </p>
                         </div>
                     </div>
@@ -98,7 +98,7 @@ export default function Spotify() {
                         </div>
                         <div className="flex flex-col">
                             <div className="text-sm font-bold truncate hover:underline cursor-pointer">Discovering Vibes...</div>
-                            <div className="text-[11px] text-gray-400 hover:underline cursor-pointer">NOTREGRETO</div>
+                            <div className="text-[11px] text-gray-400 hover:underline cursor-pointer">ParthAroraTSC</div>
                         </div>
                         <div className="ml-5 flex space-x-3 text-gray-400">
                              <svg className="w-4 h-4 hover:text-white cursor-pointer" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H4z"/></svg>

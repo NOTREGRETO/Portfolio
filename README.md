@@ -1,4 +1,4 @@
-# NOTREGRETO Portfolio
+# ParthAroraTSC Portfolio
 
 A professional, high-fidelity Cybersecurity Portfolio designed with a custom Ubuntu 20.04 (Linux) theme. This project showcases technical expertise in SOC Analysis, VAPT, and Network Security through an interactive desktop environment.
 
